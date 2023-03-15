@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <body class="bbody">
+    <div class="loginbox resetpass">
+      <img src="images/ava.webp" class="imgg" />
+      <h1>Create New Password</h1>
+      <form>
+        <span id="error"></span><br/>
+        <p>Email Id</p>
+        <input type="text" name="email" placeholder="Enter Email" id="emailId" />
+        <input type="submit" name="login" value="Password Link" id='resetPass' />
+        <a href="login" style="float: left">LogIn</a>
+        <a href="signup" style="float: right">Don't have an Account?</a>
+      </form>
+    </div>
+    <div class="loader-div">
+      <img class="loader-img" src="images/Triple intersection.gif" style="height:120px;width:auto;" />
+  </div>
+  </body>
+{% endblock %}
