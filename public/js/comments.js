@@ -1,3 +1,20 @@
+function checkValidation(formdata) {
+  var correctName = /^([A-Za-z])+$/;
+  var correctPassword = /([a-zA-Z 0-9]){8,}$/
+  var about = formdata.get("abotYou");
+  console.log(about);
+  about = about.replace(/<[^>]+>/gim, '');
+  console.log(about);
+  if (!correctName.test(formdata.get("fname")) && !correctName.test(formdata.get("lname"))){
+    return "format of name is not correct";
+  }
+  else if(!correctPassword.test(formdata.get("pass"))) {
+    return "password should be minimum 8 character";
+  }
+  return "TRUE";
+}
+
+// For sending reset password link.
 $("#resetPass").on("click", function (e) {
   $(".loader-div").show();
   e.preventDefault();
@@ -15,7 +32,7 @@ $("#resetPass").on("click", function (e) {
   });
 });
 
-
+// For reseting password.
 $("#resetP").on("click", function (e) {
   $(".loader-div").show();
   var token = this.getAttribute('token');
@@ -23,8 +40,6 @@ $("#resetP").on("click", function (e) {
   e.preventDefault();
   let pass = $("#pass").val();
   let cpass = $("#cpass").val();
-
-
   if (pass == cpass) {
   $.ajax({
     url: "/PasswordR",
@@ -47,31 +62,7 @@ else {
 }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// For logout.
 function logout(){
   $.ajax({
     url: "/logout",
@@ -82,6 +73,7 @@ function logout(){
   });
 }
 
+// For likeing post.
 function like(i) {
   let a = $("#likeIcon" + i);
   let b = a.css("color");
@@ -130,6 +122,7 @@ function like(i) {
   }
 }
 
+// For disliking post.
 function dislike(i) {
   let a = $("#dislikeIcon" + i);
   let b = a.css("color");
@@ -178,14 +171,17 @@ function dislike(i) {
   }
 }
 
+
+// Modal for edit comment.
 function displayEditCommModal(i) {
   $("#myCommentModal" + i).show("slow");
 }
-// When the user clicks on <span> (x), close the modal
+// For hiding modal.
 function hideEditCommentModal(i) {
   $("#myCommentModal" + i).hide("slow");
 }
 
+// After editing comment it will store in database.
 function confirmCommentEdit(i) {
   var afterEdit = $("#confirmCommentEditValue" + i).val();
   $.ajax({
@@ -204,7 +200,7 @@ function confirmCommentEdit(i) {
   });
 }
 
-// For coments hiding and showing
+// For showing comment data.
 function showCommentData(comm, i) {
   var dis = "";
   if (comm.email != comm.loginEmail) {
@@ -214,7 +210,7 @@ function showCommentData(comm, i) {
     `
     <div id="commTop` +
       comm.id +
-      `">
+      `" class="commz">
       <div class="posttop" id="commentTop` +
       comm.id +
       `">
@@ -275,6 +271,8 @@ function showCommentData(comm, i) {
 `
   );
 }
+
+// For showing all the comments.
 function showComment(i) {
   $("#comm" + i).show("slow");
   $("#commentbut" + i).hide();
@@ -299,10 +297,12 @@ function showComment(i) {
   });
 }
 
+// For hiding comments.
 function hideComment(i) {
-  $("#comm" + i).hide("slow");
+  $("#comm" + i).hide();
   $("#hide" + i).hide();
   $("#commentbut" + i).show("slow");
+  $(".commz").remove();
 }
 
 // For deleting post.
@@ -324,14 +324,16 @@ function DeletePost(i) {
   });
 }
 
+// Display the modal for editing posts.
 function displayEditModal(i) {
   $("#myModal" + i).show("slow");
 }
-// When the user clicks on <span> (x), close the modal
+// hiding the modal after clicking on (X).
 function hideEditModal(i) {
   $("#myModal" + i).hide("slow");
 }
 
+// After editing post saving changes.
 function confirmEdit(i) {
   var afterEdit = $("#confirmEditValue" + i).val();
   $.ajax({
@@ -353,6 +355,7 @@ function confirmEdit(i) {
 // Add comments.
 function addComment(i) {
   var comment = $("#commentValue" + i).val();
+  var comment = comment.replace(/<[^>]+>/gim, '');
   $.ajax({
     url: "/addComment",
     type: "POST",
@@ -371,6 +374,7 @@ function addComment(i) {
   });
 }
 
+// Delete comment.
 function DeleteComm(i) {
   $.ajax({
     url: "/deleteComm",
@@ -378,7 +382,6 @@ function DeleteComm(i) {
     data: {
       i: i,
     },
-
     success: function (data) {
       if (data == "done") {
         $("#commTop" + i).remove();
@@ -400,7 +403,7 @@ $(document).ready(function () {
     var email = $("#emailId").val();
     var pass = $("#pass").val();
     $.ajax({
-      url: "/login-match",
+      url: "/login",
       type: "POST",
       data: {
         email: email,
@@ -423,24 +426,32 @@ $(document).ready(function () {
       formdata = new FormData(this);
       var fileData = $('input[type="file"]')[0].files[0];
       formdata.append("image", fileData);
-      $.ajax({
-        url: "/newAccount",
-        type: "POST",
-        data: formdata,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-          if (data == "done") {
-            $("#subsignup").trigger("reset");
-            window.location.href = "http://deepak.com/";
-          } else {
-            $("#error").html(data);
-          }
-        },
-        error: function (xhr, status, error) {
-          alert(xhr.responseText);
-        },
-      });
+      validation = checkValidation(formdata);
+      if (validation == "TRUE") {
+        $.ajax({
+          url: "/newAccount",
+          type: "POST",
+          data: formdata,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            if (data == "done") {
+              $("#subsignup").trigger("reset");
+              window.location.href = "http://deepak.com/";
+            } else {
+              $("#error").html(data);
+              console.log(data);
+            }
+          },
+          error: function (xhr, status, error) {
+            alert(xhr.responseText);
+          },
+        });
+      }
+      else {
+        $("#error").html(validation);
+        console.log(formdata);
+      }
     });
   });
 
@@ -500,6 +511,9 @@ $(document).ready(function () {
           $(".loader-div").hide();
         }
       },
+      error: function (xhr, status, error) {
+        alert(xhr.responseText);
+      },
     });
   });
 
@@ -538,12 +552,13 @@ $(document).ready(function () {
     }
   }
 
+  // For adding new posts
   function addpost(post) {
     var option = "";
     if (post.email != post.loginEmail) {
       option = "none";
     }
-    $("#postpart").append(
+    $("#postpart").prepend(
       `
     <div class="post" id="post` +
         post.id +
@@ -688,7 +703,7 @@ $(document).ready(function () {
     },
   });
 
-  // For add ind posts.
+  // For addind posts.
   $("#button").on("click", function (e) {
     e.preventDefault();
     var PostDetails = $("#postdescription").val();
@@ -700,9 +715,9 @@ $(document).ready(function () {
         post: PostDetails,
       },
       success: function (data) {
-        data.posts.forEach(function (post) {
-          addpost(post);
-        });
+        console.log(data);
+        l = data.posts.length;
+        addpost(data.posts[l - 1]);
         $("#postdescription").val("");
       },
       error: function (xhr, status, error) {
@@ -711,6 +726,7 @@ $(document).ready(function () {
     });
   });
 
+  // For loading data.
   $.ajax({
     url: "/dataLoad",
     success: function (data) {

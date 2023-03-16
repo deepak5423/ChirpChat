@@ -245,4 +245,14 @@ class Login
 
         return $this;
     }
+    public function setVal(array $dataSetAccount) {
+        $this->setFirstName($dataSetAccount['firstName']);
+        $this->setLastName($dataSetAccount['lastName']);
+        $this->setGender($dataSetAccount['gender']);
+        $this->setImg($dataSetAccount['image']);
+        $this->setAbout($dataSetAccount['about']);
+        $this->setEmail($dataSetAccount['email']);
+        $this->setPassword($dataSetAccount['pass']);
+        $this->setStatus('1');
+    }
 }
