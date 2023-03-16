@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+  {% block body %}
+    <section class="header">
+      <div class="container">
+        <div class="headerBody">
+          <img src="{{asset('/images/logo-removebg-preview.png')}}" class="logo" />
+          <div class="rightsideheader">
+            <ul>
+              <li>
+                <div class="icon"><i class="fa fa-home"></i></div>
+                Home
+              </li>
+              <li>
+                <div class="icon"><i class="fa fa-comments"></i></div>
+                Messages
+              </li>
+              <li>
+                <div class="icon"><i class="fa fa-bolt"></i></div>
+                Notifications
+              </li>
+              <li>
+                <div class="icon"><i class="fa fa-user"></i></div>
+                Profile
+              </li>
+            </ul>
+            <div class="headimg" id="headimg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="container">
+        <div class="bodypart">
+          <div class="leftbody">
+            <div class="topleftbody"></div>
+            <div class="middleleftbody" id="middleleftbody">
+            </div>
+            <div class="bottomleftbody">
+              <div class="online">
+                <div class="onlinetop">
+                  <h2>Users</h2>
+                </div>
+                <div class="allUser">
+                  <div class="onlinrdown" id="onlinrdown">
+                  
+                  </div>
+                  <div class="onlinrup" id="onlinrup">
+                  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="rightbody">
+            <div class="wiym">
+              <textarea
+                name="WIYM"
+                class="areatext"
+                placeholder="What's In Your Mind"
+                id="postdescription"
+              ></textarea>
+              <div class="button" id="button">POST</div>
+            </div>
+            <div class="postpart" id='postpart'>
+              
+            </div>
+          </div>
+        </div>
+      </div>      
+    </section>
+  {% endblock %}
